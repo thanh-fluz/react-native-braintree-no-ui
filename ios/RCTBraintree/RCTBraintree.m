@@ -7,7 +7,6 @@
 //
 
 #import "RCTBraintree.h"
-#import <React/RCTLog.h>
 #import <Braintree3DSecure.h>
 #import <BraintreeUI.h>
 
@@ -171,14 +170,8 @@ RCT_EXPORT_METHOD(getCardNonce: (NSDictionary *)parameters callback: (RCTRespons
 
 RCT_EXPORT_METHOD(getCardNonceWithThreeDSecure: (NSDictionary *)parameters callback: (RCTResponseSenderBlock)callback)
 {
-    // NSDictionary *cardDetails = [parameters objectForKey:@"cardDetails"];
-    //NSString *amount = [parameters valueForKey:@"amount"];
     NSDecimalNumber *amount = parameters[@"amount"];
     NSDictionary *cardDetails = parameters[@"cardDetails"];
-
-    RCTLog(@"HEllo FROM ObjectiveC");
-    RCTLog(@"amount: %@", amount);
-    
 
     BTCardClient *cardClient = [[BTCardClient alloc] initWithAPIClient: self.braintreeClient];
     BTCard *card = [[BTCard alloc] initWithParameters:cardDetails];
@@ -188,29 +181,24 @@ RCT_EXPORT_METHOD(getCardNonceWithThreeDSecure: (NSDictionary *)parameters callb
         __block NSArray *args = @[];
         
         if ( error == nil ) {
-            // args = @[[NSNull null], tokenizedCard.nonce];
             
-            // Create threeDSecure instance.
             BTThreeDSecureDriver *threeDSecure = [[BTThreeDSecureDriver alloc] initWithAPIClient:self.braintreeClient delegate:self];
             
             [threeDSecure verifyCardWithNonce:tokenizedCard.nonce amount:amount completion:^(BTThreeDSecureCardNonce * _Nullable threeDSecureCard, NSError * _Nullable error) {
                 if (error) {
-                    RCTLog(@"ERROR WITH 3D SECURE");
-                    // args = @[@YES, [NSNull null]];
-                    // args = @[[NSNull null], threeDSecureCard];
+                   //Handle error
                 } else if (threeDSecureCard) {
                     if (threeDSecureCard.liabilityShiftPossible && threeDSecureCard.liabilityShifted) {
-                        RCTLog(@"Liability shift possible and liability shifted");
-                        
+                        //Liability shift possible and liability shifted
                         args = @[[NSNull null], threeDSecureCard.nonce];
                     } else {
-                        RCTLog(@"3D Secure authentication was attempted but liability shift is not possible");
+                        //3D Secure authentication was attempted but liability shift is not possible
                         //TODO: Define if this means an error or just return the tokenizedCard.nonce value.
                     }
                     
                 } else {
                     //TODO: Define if this means an error or just return the tokenizedCard.nonce value.
-                    RCTLog(@"User Cancelled");
+                    //User Cancelled
                 }
                 
                 callback(args);
