@@ -1,1 +1,13 @@
-example
+ios/RCTBraintree.xcodeproj/xcuserdata/**/*
+ios/RCTBraintree.xcodeproj/project.xcworkspace/**/*
+example/
+.git
+.idea
+.gradle/
+gradlew
+gradlew.bat
+gradle/
+*.properties
+*.iml
+npm-debug.log
+.DS_Store

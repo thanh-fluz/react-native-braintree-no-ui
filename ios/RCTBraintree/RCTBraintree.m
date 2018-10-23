@@ -7,6 +7,9 @@
 //
 
 #import "RCTBraintree.h"
+#import <React/RCTLog.h>
+#import <Braintree3DSecure.h>
+#import <BraintreeUI.h>
 
 @implementation RCTBraintree {
     bool runCallback;
@@ -136,11 +139,11 @@ RCT_EXPORT_METHOD(getCardNonce: (NSDictionary *)parameters callback: (RCTRespons
     BTCardClient *cardClient = [[BTCardClient alloc] initWithAPIClient: self.braintreeClient];
     BTCard *card = [[BTCard alloc] initWithParameters:parameters];
     card.shouldValidate = YES;
-
+    
     [cardClient tokenizeCard:card
                   completion:^(BTCardNonce *tokenizedCard, NSError *error) {
                       NSArray *args = @[];
-
+                      
                       if ( error == nil ) {
                           args = @[[NSNull null], tokenizedCard.nonce];
                       } else {
@@ -153,7 +156,7 @@ RCT_EXPORT_METHOD(getCardNonce: (NSDictionary *)parameters callback: (RCTRespons
                           NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfo
                                                                              options:NSJSONWritingPrettyPrinted
                                                                                error:&serialisationErr];
-
+                          
                           if (! jsonData) {
                               args = @[serialisationErr.description, [NSNull null]];
                           } else {
@@ -161,9 +164,76 @@ RCT_EXPORT_METHOD(getCardNonce: (NSDictionary *)parameters callback: (RCTRespons
                               args = @[jsonString, [NSNull null]];
                           }
                       }
-
+                    
                       callback(args);
                   }];
+}
+
+RCT_EXPORT_METHOD(getCardNonceWithThreeDSecure: (NSDictionary *)parameters callback: (RCTResponseSenderBlock)callback)
+{
+    // NSDictionary *cardDetails = [parameters objectForKey:@"cardDetails"];
+    //NSString *amount = [parameters valueForKey:@"amount"];
+    NSDecimalNumber *amount = parameters[@"amount"];
+    NSDictionary *cardDetails = parameters[@"cardDetails"];
+
+    RCTLog(@"HEllo FROM ObjectiveC");
+    RCTLog(@"amount: %@", amount);
+    
+
+    BTCardClient *cardClient = [[BTCardClient alloc] initWithAPIClient: self.braintreeClient];
+    BTCard *card = [[BTCard alloc] initWithParameters:cardDetails];
+    card.shouldValidate = YES;
+    
+    [cardClient tokenizeCard:card completion:^(BTCardNonce *tokenizedCard, NSError *error) {
+        __block NSArray *args = @[];
+        
+        if ( error == nil ) {
+            // args = @[[NSNull null], tokenizedCard.nonce];
+            
+            // Create threeDSecure instance.
+            BTThreeDSecureDriver *threeDSecure = [[BTThreeDSecureDriver alloc] initWithAPIClient:self.braintreeClient delegate:self];
+            
+            [threeDSecure verifyCardWithNonce:tokenizedCard.nonce amount:amount completion:^(BTThreeDSecureCardNonce * _Nullable threeDSecureCard, NSError * _Nullable error) {
+                if (error) {
+                    RCTLog(@"ERROR WITH 3D SECURE");
+                    // args = @[@YES, [NSNull null]];
+                    // args = @[[NSNull null], threeDSecureCard];
+                } else if (threeDSecureCard) {
+                    if (threeDSecureCard.liabilityShiftPossible && threeDSecureCard.liabilityShifted) {
+                        RCTLog(@"Liability shift possible and liability shifted");
+                        
+                        args = @[[NSNull null], threeDSecureCard.nonce];
+                    } else {
+                        RCTLog(@"3D Secure authentication was attempted but liability shift is not possible");
+                        //TODO: Define if this means an error or just return the tokenizedCard.nonce value.
+                    }
+                    
+                } else {
+                    //TODO: Define if this means an error or just return the tokenizedCard.nonce value.
+                    RCTLog(@"User Cancelled");
+                }
+                
+                callback(args);
+            }];
+        } else {
+            NSMutableDictionary *userInfo = [error.userInfo mutableCopy];
+
+            [userInfo removeObjectForKey:@"com.braintreepayments.BTHTTPJSONResponseBodyKey"];
+            [userInfo removeObjectForKey:@"com.braintreepayments.BTHTTPURLResponseKey"];
+
+            NSError *serialisationErr;
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfo options:NSJSONWritingPrettyPrinted error:&serialisationErr];
+
+            if (!jsonData) {
+                args = @[serialisationErr.description, [NSNull null]];
+            } else {
+                NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                args = @[jsonString, [NSNull null]];
+            }
+            
+            callback(args);
+        }
+    }];
 }
 
 RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSenderBlock)callback)

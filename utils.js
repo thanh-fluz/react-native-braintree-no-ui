@@ -22,6 +22,7 @@ export function mapParameters(
     cvv: parameters.cvv,
     expirationDate: parameters.expirationDate,
     cardholderName: parameters.cardholderName,
+    // amount: parameters.amount,
     billingAddress: {
       postalCode: parameters.postalCode,
       streetAddress: parameters.streetAddress,

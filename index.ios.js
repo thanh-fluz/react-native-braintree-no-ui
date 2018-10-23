@@ -53,6 +53,40 @@ var Braintree = {
     });
   },
 
+  getCardNonceWithThreeDSecure(rawCardDetails: CardParameters = {}, amount = 0) {
+    console.log("[XPLAT] getCardNonceWithThreeDSecure was called", {rawCardDetails, amount});
+
+    const cardDetails = mapParameters(rawCardDetails);
+    const parameters = {
+      cardDetails,
+      amount
+    }
+
+    console.log("Parameters in threeDSecure js", parameters);
+
+    return new Promise(function(resolve, reject) {
+      RCTBraintree.getCardNonceWithThreeDSecure(parameters, function(err, nonce) {
+        console.log("[XPLAT] Response from getCardNonceWithThreeDSecure", {err, nonce});
+        let jsonErr = null;
+
+        try {
+          jsonErr = JSON.parse(err);
+        } catch (e) {
+          //
+        }
+
+        nonce !== null
+          ? resolve(nonce)
+          : reject(
+          jsonErr
+            ? jsonErr['BTCustomerInputBraintreeValidationErrorsKey'] ||
+            jsonErr
+            : err
+          );
+      });
+    });
+  },
+
   getCardNonce(parameters: CardParameters = {}) {
     return new Promise(function(resolve, reject) {
       RCTBraintree.getCardNonce(mapParameters(parameters), function(
