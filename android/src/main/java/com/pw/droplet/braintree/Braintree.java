@@ -200,7 +200,6 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
   public void getCardNonceWithThreeDSecure(final ReadableMap parameters, final float orderTotal, final Callback successCallback, final Callback errorCallback) {
     this.successCallback = successCallback;
     this.errorCallback = errorCallback;
-    this.threeDSecureOptions = options.getMap("threeDSecure");
 
     CardBuilder cardBuilder = new CardBuilder()
       .validate(true);
