@@ -21,7 +21,16 @@ module.exports = {
       );
     });
   },
-
+  getCardNonceWithThreeDSecure(parameters = {}, orderTotal) {
+    return new Promise(function(resolve, reject) {
+      Braintree.getCardNonceWithThreeDSecure(
+        mapParameters(parameters),
+        orderTotal,
+        nonce => resolve(nonce),
+        err => reject(err)
+      );
+    });
+  },
   showPaymentViewController(config = {}) {
     var options = {
       callToActionText: config.callToActionText,

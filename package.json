@@ -18,6 +18,6 @@
     "build": "cp -r ./ ../beautybay-app/node_modules/react-native-braintree-xplat/"
   },
   "devDependencies": {
-    "watch": "^.0.2"
+    "watch": "1.0.2"
   }
 }
