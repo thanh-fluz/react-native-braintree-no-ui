@@ -65,7 +65,8 @@ var Braintree = {
         try {
           const jsonErr = JSON.parse(err);
 
-          return reject(jsonErr["BTCustomerInputBraintreeValidationErrorsKey"] || jsonErr);
+          if (jsonErr)
+            return reject(jsonErr["BTCustomerInputBraintreeValidationErrorsKey"] || jsonErr);
         } catch (e) {
           //
         }
