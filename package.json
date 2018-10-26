@@ -1,6 +1,6 @@
 {
   "name": "@beautybay/react-native-braintree-xplat",
-  "version": "4.1.3",
+  "version": "4.2.0",
   "description": "Cross platform Braintree module",
   "main": "index",
   "author": {

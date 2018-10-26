@@ -54,35 +54,26 @@ var Braintree = {
   },
 
   getCardNonceWithThreeDSecure(rawCardDetails: CardParameters = {}, amount = 0) {
-    console.log("[XPLAT] getCardNonceWithThreeDSecure was called", {rawCardDetails, amount});
-
     const cardDetails = mapParameters(rawCardDetails);
     const parameters = {
       cardDetails,
       amount
     }
 
-    console.log("Parameters in threeDSecure js", parameters);
-
     return new Promise(function(resolve, reject) {
       RCTBraintree.getCardNonceWithThreeDSecure(parameters, function(err, nonce) {
-        console.log("[XPLAT] Response from getCardNonceWithThreeDSecure", {err, nonce});
-        let jsonErr = null;
-
         try {
-          jsonErr = JSON.parse(err);
+          const jsonErr = JSON.parse(err);
+
+          return reject(jsonErr["BTCustomerInputBraintreeValidationErrorsKey"] || jsonErr);
         } catch (e) {
           //
         }
 
-        nonce !== null
-          ? resolve(nonce)
-          : reject(
-          jsonErr
-            ? jsonErr['BTCustomerInputBraintreeValidationErrorsKey'] ||
-            jsonErr
-            : err
-          );
+        if (err)
+          return reject(err);
+
+        return resolve(nonce);
       });
     });
   },

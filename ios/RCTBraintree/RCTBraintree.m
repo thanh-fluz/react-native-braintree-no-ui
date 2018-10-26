@@ -180,28 +180,24 @@ RCT_EXPORT_METHOD(getCardNonceWithThreeDSecure: (NSDictionary *)parameters callb
     [cardClient tokenizeCard:card completion:^(BTCardNonce *tokenizedCard, NSError *error) {
         __block NSArray *args = @[];
         
-        if ( error == nil ) {
-            
+        if (error == nil) {
             BTThreeDSecureDriver *threeDSecure = [[BTThreeDSecureDriver alloc] initWithAPIClient:self.braintreeClient delegate:self];
             
             [threeDSecure verifyCardWithNonce:tokenizedCard.nonce amount:amount completion:^(BTThreeDSecureCardNonce * _Nullable threeDSecureCard, NSError * _Nullable error) {
                 if (error) {
-                   //Handle error
+                    return callback(@[error.localizedDescription, [NSNull null]]);
                 } else if (threeDSecureCard) {
-                    if (threeDSecureCard.liabilityShiftPossible && threeDSecureCard.liabilityShifted) {
-                        //Liability shift possible and liability shifted
-                        args = @[[NSNull null], threeDSecureCard.nonce];
-                    } else {
-                        //3D Secure authentication was attempted but liability shift is not possible
-                        //TODO: Define if this means an error or just return the tokenizedCard.nonce value.
-                    }
-                    
+                    if (!threeDSecureCard.liabilityShiftPossible)
+                        return callback(@[[NSNull null], tokenizedCard.nonce]);
+
+                    if (threeDSecureCard.liabilityShifted)
+                        return callback(@[[NSNull null], threeDSecureCard.nonce]);
+
+                    return callback(@[@"3DSECURE_LIABILITY_WAS_POSSIBLE_BUT_NOT_SHIFTED", [NSNull null]]);
                 } else {
-                    //TODO: Define if this means an error or just return the tokenizedCard.nonce value.
-                    //User Cancelled
+                    // User Cancelled
+                    return callback(@[[NSNull null], [NSNull null]]);
                 }
-                
-                callback(args);
             }];
         } else {
             NSMutableDictionary *userInfo = [error.userInfo mutableCopy];
