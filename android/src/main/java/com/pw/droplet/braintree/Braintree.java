@@ -78,14 +78,15 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
         public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
           if (threeDSecureOptions != null && paymentMethodNonce instanceof CardNonce) {
             CardNonce cardNonce = (CardNonce) paymentMethodNonce;
-            if (!cardNonce.getThreeDSecureInfo().isLiabilityShiftPossible()) {
-              nonceErrorCallback("3DSECURE_NOT_ABLE_TO_SHIFT_LIABILITY");
-            } else if (!cardNonce.getThreeDSecureInfo().isLiabilityShifted()) {
-              nonceErrorCallback("3DSECURE_LIABILITY_NOT_SHIFTED");
-            } else {
+            if(!cardNonce.getThreeDSecureInfo().isLiabilityShiftPossible()
+            || cardNonce.getThreeDSecureInfo().isLiabilityShifted()) {
               nonceCallback(paymentMethodNonce.getNonce());
             }
-          } else {
+            else {
+              nonceErrorCallback("3DSECURE_LIABILITY_WAS_POSSIBLE_BUT_NOT_SHIFTED");
+            }
+          }
+          else {
             nonceCallback(paymentMethodNonce.getNonce());
           }
         }
@@ -197,9 +198,10 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
   }
 
   @ReactMethod
-  public void getCardNonceWithThreeDSecure(final ReadableMap parameters, final float orderTotal, final Callback successCallback, final Callback errorCallback) {
+  public void getCardNonceWithThreeDSecure(final ReadableMap parameters, final float orderTotal, final ReadableMap options, final Callback successCallback, final Callback errorCallback) {
     this.successCallback = successCallback;
     this.errorCallback = errorCallback;
+    this.threeDSecureOptions = options.getMap("threeDSecure");
 
     CardBuilder cardBuilder = new CardBuilder()
       .validate(true);

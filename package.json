@@ -1,6 +1,6 @@
 {
   "name": "@beautybay/react-native-braintree-xplat",
-  "version": "4.2.2",
+  "version": "4.2.3",
   "description": "Cross platform Braintree module",
   "main": "index",
   "author": {
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build:watch": "watch 'npm run build' .",
-    "build": "cp -r ./ ../beautybay-app/node_modules/react-native-braintree-xplat/"
+    "build": "cp -r ./ ../beautybay-app/node_modules/@beautybay/react-native-braintree-xplat/ && rm -rf ../beautybay-app/node_modules/@beautybay/react-native-braintree-xplat/.git"
   },
   "devDependencies": {
     "watch": "1.0.2"
