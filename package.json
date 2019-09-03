@@ -1,18 +1,9 @@
 {
   "name": "@beautybay/react-native-braintree-xplat",
-  "version": "4.2.4",
+  "version": "4.2.5",
   "description": "Cross platform Braintree module",
   "main": "index",
-  "author": {
-    "name": "Rickard Ekman",
-    "email": "rickard@swiftpulse.com",
-    "url": "https://github.com/kraffslol"
-  },
   "license": "MIT",
-  "respository": {
-    "type": "git",
-    "url": "git@github.com:kraffslol/react-native-braintree-xplat.git"
-  },
   "scripts": {
     "build:watch": "watch 'npm run build' .",
     "build": "cp -r ./ ../beautybay-app/node_modules/@beautybay/react-native-braintree-xplat/ && rm -rf ../beautybay-app/node_modules/@beautybay/react-native-braintree-xplat/.git"
