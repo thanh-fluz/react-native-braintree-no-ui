@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import android.content.Intent;
 import android.content.Context;
 import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.braintreepayments.api.ThreeDSecure;
 import com.braintreepayments.api.PaymentRequest;
@@ -79,7 +80,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
           if (threeDSecureOptions != null && paymentMethodNonce instanceof CardNonce) {
             CardNonce cardNonce = (CardNonce) paymentMethodNonce;
             if(!cardNonce.getThreeDSecureInfo().isLiabilityShiftPossible()
-            || cardNonce.getThreeDSecureInfo().isLiabilityShifted()) {
+                    || cardNonce.getThreeDSecureInfo().isLiabilityShifted()) {
               nonceCallback(paymentMethodNonce.getNonce());
             }
             else {
@@ -142,7 +143,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
     this.errorCallback = errorCallback;
 
     CardBuilder cardBuilder = new CardBuilder()
-      .validate(true);
+            .validate(true);
 
     if (parameters.hasKey("number"))
       cardBuilder.cardNumber(parameters.getString("number"));
@@ -204,7 +205,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
     this.threeDSecureOptions = options.getMap("threeDSecure");
 
     CardBuilder cardBuilder = new CardBuilder()
-      .validate(true);
+            .validate(true);
 
     if (parameters.hasKey("number"))
       cardBuilder.cardNumber(parameters.getString("number"));
@@ -300,15 +301,15 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
     }
 
     paymentRequest = new PaymentRequest()
-      .submitButtonText(callToActionText)
-      .primaryDescription(title)
-      .secondaryDescription(description)
-      .amount(amount)
-      .clientToken(this.getToken());
+            .submitButtonText(callToActionText)
+            .primaryDescription(title)
+            .secondaryDescription(description)
+            .amount(amount)
+            .clientToken(this.getToken());
 
     (getCurrentActivity()).startActivityForResult(
-      paymentRequest.getIntent(getCurrentActivity()),
-      PAYMENT_REQUEST
+            paymentRequest.getIntent(getCurrentActivity()),
+            PAYMENT_REQUEST
     );
   }
 
@@ -325,7 +326,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
       switch (resultCode) {
         case Activity.RESULT_OK:
           PaymentMethodNonce paymentMethodNonce = data.getParcelableExtra(
-            BraintreePaymentActivity.EXTRA_PAYMENT_METHOD_NONCE
+                  BraintreePaymentActivity.EXTRA_PAYMENT_METHOD_NONCE
           );
 
           if (this.threeDSecureOptions != null) {
@@ -338,7 +339,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
         case BraintreePaymentActivity.BRAINTREE_RESULT_SERVER_ERROR:
         case BraintreePaymentActivity.BRAINTREE_RESULT_SERVER_UNAVAILABLE:
           this.errorCallback.invoke(
-            data.getSerializableExtra(BraintreePaymentActivity.EXTRA_ERROR_MESSAGE)
+                  data.getSerializableExtra(BraintreePaymentActivity.EXTRA_ERROR_MESSAGE)
           );
           break;
         case Activity.RESULT_CANCELED:
