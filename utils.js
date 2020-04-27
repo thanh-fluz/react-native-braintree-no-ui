@@ -16,26 +16,24 @@ export function mapParameters(
   }
 
   // iOS field mapping
-  // https://github.com/braintree/braintree_ios/blob/master/BraintreeCard/BTCard.m#L14
   return {
     number: parameters.number,
     cvv: parameters.cvv,
-    expirationDate: parameters.expirationDate,
-    cardholderName: parameters.cardholderName,
-    // amount: parameters.amount,
-    billingAddress: {
-      postalCode: parameters.postalCode,
-      streetAddress: parameters.streetAddress,
-      extendedAddress: parameters.extendedAddress,
+    expiration_date: parameters.expirationDate,
+    cardholder_name: parameters.cardholderName,
+    billing_address: {
+      postal_code: parameters.postalCode,
+      street_address: parameters.streetAddress,
+      extended_address: parameters.extendedAddress,
       locality: parameters.locality,
       region: parameters.region,
-      countryName: parameters.countryName,
-      countryCodeAlpha2: parameters.countryCodeAlpha2,
-      countryCodeAlpha3: parameters.countryCodeAlpha3,
-      countryCodeNumeric: parameters.countryCodeNumeric,
-      firstName: parameters.firstName,
-      lastName: parameters.lastName,
-      company: parameters.company,
+      country_name: parameters.countryName,
+      country_code_alpha2: parameters.countryCodeAlpha2,
+      country_code_alpha3: parameters.countryCodeAlpha3,
+      country_code_numeric: parameters.countryCodeNumeric,
+      first_name: parameters.firstName,
+      last_name: parameters.lastName,
+      company: parameters.company
     },
   };
 }

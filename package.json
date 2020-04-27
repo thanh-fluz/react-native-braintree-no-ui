@@ -1,14 +1,11 @@
 {
   "name": "@beautybay/react-native-braintree-xplat",
-  "version": "4.2.5",
+  "version": "5.0.7",
   "description": "Cross platform Braintree module",
   "main": "index",
-  "license": "MIT",
-  "scripts": {
-    "build:watch": "watch 'npm run build' .",
-    "build": "cp -r ./ ../beautybay-app/node_modules/@beautybay/react-native-braintree-xplat/ && rm -rf ../beautybay-app/node_modules/@beautybay/react-native-braintree-xplat/.git"
+  "author": {
+    "name": "BB Dev"
   },
-  "devDependencies": {
-    "watch": "1.0.2"
-  }
+  "homepage": "https://github.com/bbaydev/react-native-braintree-xplat",
+  "license": "MIT"
 }
