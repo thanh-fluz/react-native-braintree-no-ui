@@ -11,28 +11,28 @@ import java.util.Collections;
 import java.util.List;
 
 public class BraintreePackage implements ReactPackage {
-    private Braintree mModuleInstance;
+  private Braintree mModuleInstance;
 
-    public BraintreePackage() {
+  public BraintreePackage() {
+    
+  }
 
-    }
+  @Override
+  public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+    List<NativeModule> modules = new ArrayList<>();
+    mModuleInstance = new Braintree(reactContext);
 
-    @Override
-    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        List<NativeModule> modules = new ArrayList<>();
-        mModuleInstance = new Braintree(reactContext);
+    modules.add(mModuleInstance);
+    return modules;
+  }
 
-        modules.add(mModuleInstance);
-        return modules;
-    }
+ // Deprecated RN 0.47
+  public List<Class<? extends JavaScriptModule>> createJSModules() {
+    return Collections.emptyList();
+  }
 
-    // Deprecated RN 0.47
-    public List<Class<? extends JavaScriptModule>> createJSModules() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Collections.emptyList();
-    }
+  @Override
+  public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+    return Collections.emptyList();
+  }
 }
