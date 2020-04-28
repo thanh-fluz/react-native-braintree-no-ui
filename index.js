@@ -76,6 +76,23 @@ module.exports = {
     });
   },
 
+  getCardNonceWithThreeDSecureAndroid(parameters = {}, orderTotal) {
+    var options = {
+      threeDSecure: {
+        amount: orderTotal
+      }
+    };
+    return new Promise(function(resolve, reject) {
+      Braintree.getCardNonceWithThreeDSecure(
+        mapParameters(parameters),
+        orderTotal,
+        options,
+        nonce => resolve(nonce),
+        err => reject(err)
+      );
+    });
+  },
+
   getDeviceData(options = {}) {
     return new Promise(function(resolve, reject) {
         Braintree.getDeviceData(options, function(err, deviceData) {
