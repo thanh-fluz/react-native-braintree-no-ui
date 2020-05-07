@@ -43,19 +43,15 @@ module.exports = {
   },
 
   getCardNonceWithThreeDSecure(rawCardDetails: CardParameters = {}, amount = 0) {
-    console.log("[XPLAT] getCardNonceWithThreeDSecure was called", {rawCardDetails, amount});
-
     const cardDetails = mapParameters(rawCardDetails);
     const parameters = {
       cardDetails,
       amount
     }
 
-    console.log("Parameters in threeDSecure js", parameters);
-
     return new Promise(function(resolve, reject) {
       Braintree.getCardNonceWithThreeDSecure(parameters, function(err, nonce) {
-        console.log("[XPLAT] Response from getCardNonceWithThreeDSecure", {err, nonce});
+
         let jsonErr = null;
 
         try {
