@@ -1,6 +1,6 @@
 {
   "name": "@fluzclient/react-native-braintree-xplat",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "React Native Braintree module",
   "main": "index",
   "author": {
