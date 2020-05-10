@@ -1,11 +1,11 @@
 {
-  "name": "@beautybay/react-native-braintree-xplat",
-  "version": "5.1.1",
+  "name": "@fluzclient/react-native-braintree-xplat",
+  "version": "4.0.1",
   "description": "Cross platform Braintree module",
   "main": "index",
   "author": {
-    "name": "BB Dev"
+    "name": "Fluz Dev"
   },
-  "homepage": "https://github.com/bbaydev/react-native-braintree-xplat",
+  "homepage": "https://github.com/StronkMan/react-native-braintree-xplat.git",
   "license": "MIT"
 }

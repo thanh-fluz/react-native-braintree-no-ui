@@ -18,6 +18,7 @@ Pod::Spec.new do |s|
   s.dependency 'Braintree'
   s.dependency 'BraintreeDropIn'
   s.dependency 'Braintree/PayPal'
+  s.dependency 'Braintree/Venmo'
   s.dependency 'Braintree/Apple-Pay'
   s.dependency 'Braintree/3D-Secure'
   s.dependency 'Braintree/DataCollector'
