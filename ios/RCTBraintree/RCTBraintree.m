@@ -138,9 +138,7 @@ RCT_EXPORT_METHOD(showVenmoViewController:(RCTResponseSenderBlock)callback)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
 
-        [BTConfiguration enableVenmo:true];
         BTVenmoDriver *venmoDriver = [[BTVenmoDriver alloc] initWithAPIClient:self.braintreeClient];
-        _venmoButton.hidden = [venmoDriver isiOSAppAvailableForAppSwitch];
 
         [venmoDriver authorizeAccountWithCompletion:^(BTVenmoAccountNonce * _Nullable venmoAccount, NSError * _Nullable error) {
             NSMutableArray *args = @[[NSNull null]];

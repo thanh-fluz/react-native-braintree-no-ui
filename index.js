@@ -152,7 +152,7 @@ module.exports = {
   showVenmoViewController() {
     return new Promise(function (resolve, reject) {
       if (Platform.OS === 'ios') {
-        RCTBraintree.showVenmoViewController(function (err, nonce) {
+        Braintree.showVenmoViewController(function (err, nonce) {
           nonce != null ? resolve(nonce) : reject(err);
         });
       } else {
