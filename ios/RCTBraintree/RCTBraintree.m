@@ -134,6 +134,33 @@ RCT_EXPORT_METHOD(showPayPalViewController:(RCTResponseSenderBlock)callback)
     });
 }
 
+RCT_EXPORT_METHOD(showVenmoViewController:(RCTResponseSenderBlock)callback)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+        [BTConfiguration enableVenmo:true];
+        BTVenmoDriver *venmoDriver = [[BTVenmoDriver alloc] initWithAPIClient:self.braintreeClient];
+        _venmoButton.hidden = [venmoDriver isiOSAppAvailableForAppSwitch];
+
+        [venmoDriver authorizeAccountWithCompletion:^(BTVenmoAccountNonce * _Nullable venmoAccount, NSError * _Nullable error) {
+            NSMutableArray *args = @[[NSNull null]];
+            if ( error == nil && venmoAccount != nil ) {
+                if (venmoAccount.nonce != nil) {
+                    args = @[[NSNull null], venmoAccount.nonce];
+                }
+            } else {
+                if ( error != nil ) {
+                    args = @[error.description, [NSNull null]];
+                } else {
+                    args = @[@"Payment Cancelled", [NSNull null]];
+                }
+            }
+            callback(args);
+        }];
+
+    });
+}
+
 RCT_REMAP_METHOD(getCardNonce,
                  parameters:(NSDictionary *)parameters
                  resolve:(RCTPromiseResolveBlock)resolve

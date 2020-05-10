@@ -1,7 +1,7 @@
 {
   "name": "@fluzclient/react-native-braintree-xplat",
-  "version": "4.0.2",
-  "description": "Cross platform Braintree module",
+  "version": "4.0.3",
+  "description": "React Native Braintree module",
   "main": "index",
   "author": {
     "name": "Fluz Dev"

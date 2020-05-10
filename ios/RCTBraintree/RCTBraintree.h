@@ -12,6 +12,7 @@
 
 #import "BraintreeCore.h"
 #import "BraintreePayPal.h"
+#import "BraintreeVenmo.h"
 #import "BraintreeApplePay.h"
 #import "BraintreeCard.h"
 #import "BraintreeUI.h"
