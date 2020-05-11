@@ -1,10 +1,8 @@
 # react-native-braintree-xplat
 
-[![npm version](https://badge.fury.io/js/react-native-braintree-xplat.svg)](https://badge.fury.io/js/react-native-braintree-xplat)
-
-
-
-[Follow instructions in this GitHub issue](https://github.com/kraffslol/react-native-braintree-xplat/issues/80) to [setup BrowserSwitch](https://developers.braintreepayments.com/guides/client-sdk/setup/android/v2#browser-switch-setup). It's IMPERATIVE that your `application_id` is all lowercase and contains no punctiation aside from periods.
+Follow both setup guide with native sdk first
+https://developers.braintreepayments.com/guides/client-sdk/setup/android/v3
+https://developers.braintreepayments.com/guides/client-sdk/setup/ios/v4
 
 ## Usage
 
