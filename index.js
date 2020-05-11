@@ -156,7 +156,7 @@ module.exports = {
           nonce != null ? resolve(nonce) : reject(err);
         });
       } else {
-        reject("venmo not set up for androids yet")
+        Braintree.venmoRequest(nonce => resolve(nonce), error => reject(error));
       }
     });
   },

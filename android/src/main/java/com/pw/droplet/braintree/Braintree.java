@@ -27,6 +27,8 @@ import com.braintreepayments.api.exceptions.ErrorWithResponse;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.Card;
 import com.braintreepayments.api.PayPal;
+import com.braintreepayments.api.Venmo;
+
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.interfaces.BraintreeErrorListener;
 import com.braintreepayments.api.models.CardNonce;
@@ -341,6 +343,13 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
         this.successCallback = successCallback;
         this.errorCallback = errorCallback;
         PayPal.authorizeAccount(this.mBraintreeFragment);
+    }
+
+    @ReactMethod
+    public void venmoRequest(final Callback successCallback, final Callback errorCallback) {
+        this.successCallback = successCallback;
+        this.errorCallback = errorCallback;
+        Venmo.authorizeAccount(this.mBraintreeFragment, false);
     }
 
     @Override
