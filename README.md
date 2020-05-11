@@ -71,6 +71,10 @@ if (Platform.OS === "ios") {
 }
 ```
 
+### TODO
+
+1. remove card methods and 3D-methods 
+2. remove dropin-ui related reference
 
 ## Credits
 
