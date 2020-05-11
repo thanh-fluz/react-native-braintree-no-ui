@@ -1,7 +1,9 @@
 # react-native-braintree-xplat
 
 Follow both setup guide with native sdk first
+
 https://developers.braintreepayments.com/guides/client-sdk/setup/android/v3
+
 https://developers.braintreepayments.com/guides/client-sdk/setup/ios/v4
 
 ## Usage
@@ -74,4 +76,4 @@ if (Platform.OS === "ios") {
 
 Big thanks to [@alanhhwong](https://github.com/alanhhwong) and [@surialabs](https://github.com/surialabs) for the original ios & android modules.
 
-Works made possible by https://github.com/kraffslol/react-native-braintree-xplat
+Works made possible by [@kraffslol](https://github.com/kraffslol/react-native-braintree-xplat)
