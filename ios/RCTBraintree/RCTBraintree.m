@@ -140,7 +140,7 @@ RCT_EXPORT_METHOD(showVenmoViewController:(RCTResponseSenderBlock)callback)
 
         BTVenmoDriver *venmoDriver = [[BTVenmoDriver alloc] initWithAPIClient:self.braintreeClient];
 
-        [venmoDriver authorizeAccountAndVault:YES completion:^(BTVenmoAccountNonce * _Nullable venmoAccount, NSError * _Nullable error) {
+        [venmoDriver authorizeAccountAndVault:NO completion:^(BTVenmoAccountNonce * _Nullable venmoAccount, NSError * _Nullable error) {
             NSMutableArray *args = @[[NSNull null]];
             if ( error == nil && venmoAccount != nil ) {
                 if (venmoAccount.nonce != nil) {
