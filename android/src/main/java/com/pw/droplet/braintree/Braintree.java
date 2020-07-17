@@ -17,7 +17,6 @@ import android.app.Activity;
 
 
 import com.braintreepayments.api.ThreeDSecure;
-import com.braintreepayments.api.PaymentRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.BraintreePaymentActivity;
 import com.braintreepayments.api.BraintreeFragment;
@@ -35,6 +34,9 @@ import com.braintreepayments.api.models.CardNonce;
 import com.braintreepayments.api.DataCollector;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.models.Configuration;
+import com.braintreepayments.api.models.GooglePaymentRequest;
+import com.google.android.gms.wallet.TransactionInfo;
+import com.google.android.gms.wallet.WalletConstants;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -300,43 +302,6 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
         this.errorCallback.invoke(error);
     }
 
-    @ReactMethod
-    public void paymentRequest(final ReadableMap options, final Callback successCallback,
-            final Callback errorCallback) {
-        this.successCallback = successCallback;
-        this.errorCallback = errorCallback;
-        PaymentRequest paymentRequest = null;
-
-        String callToActionText = null;
-        String title = null;
-        String description = null;
-        String amount = null;
-
-        if (options.hasKey("callToActionText")) {
-            callToActionText = options.getString("callToActionText");
-        }
-
-        if (options.hasKey("title")) {
-            title = options.getString("title");
-        }
-
-        if (options.hasKey("description")) {
-            description = options.getString("description");
-        }
-
-        if (options.hasKey("amount")) {
-            amount = options.getString("amount");
-        }
-
-        if (options.hasKey("threeDSecure")) {
-            this.threeDSecureOptions = options.getMap("threeDSecure");
-        }
-
-        paymentRequest = new PaymentRequest().submitButtonText(callToActionText).primaryDescription(title)
-                .secondaryDescription(description).amount(amount).clientToken(this.getToken());
-
-        (getCurrentActivity()).startActivityForResult(paymentRequest.getIntent(getCurrentActivity()), PAYMENT_REQUEST);
-    }
 
     @ReactMethod
     public void paypalRequest(final Callback successCallback, final Callback errorCallback) {
@@ -350,6 +315,19 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
         this.successCallback = successCallback;
         this.errorCallback = errorCallback;
         Venmo.authorizeAccount(this.mBraintreeFragment, false);
+    }
+
+    @ReactMethod
+    public void showGooglePayViewController(final ReadableMap options, final Callback successCallback, final Callback errorCallback) {
+        GooglePaymentRequest googlePaymentRequest = new GooglePaymentRequest()
+        .transactionInfo(TransactionInfo.newBuilder()
+          .setTotalPrice(options.getString("totalPrice"))
+          .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
+          .setCurrencyCode(options.getString("currencyCode"))
+          .build())
+          .billingAddressRequired(options.getBoolean("requireAddress"))
+          .googleMerchantId(options.getString("googleMerchantId"));
+          GooglePayment.requestPayment(mBraintreeFragment, googlePaymentRequest);
     }
 
     @Override
