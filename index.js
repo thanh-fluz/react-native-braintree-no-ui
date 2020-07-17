@@ -22,7 +22,6 @@ module.exports = {
       Braintree.setup(token, test => resolve(test), err => reject(err));
     });
   },
-
   getCardNonce(parameters = {}) {
     return new Promise(function (resolve, reject) {
       if (Platform.OS === 'ios') {
@@ -41,54 +40,6 @@ module.exports = {
 
     });
   },
-
-  getCardNonceWithThreeDSecure(rawCardDetails: CardParameters = {}, amount = 0) {
-    const cardDetails = mapParameters(rawCardDetails);
-    const parameters = {
-      cardDetails,
-      amount
-    }
-
-    return new Promise(function (resolve, reject) {
-      Braintree.getCardNonceWithThreeDSecure(parameters, function (err, nonce) {
-
-        let jsonErr = null;
-
-        try {
-          jsonErr = JSON.parse(err);
-        } catch (e) {
-          //
-        }
-
-        nonce !== null
-          ? resolve(nonce)
-          : reject(
-            jsonErr
-              ? jsonErr['BTCustomerInputBraintreeValidationErrorsKey'] ||
-              jsonErr
-              : err
-          );
-      });
-    });
-  },
-
-  getCardNonceWithThreeDSecureAndroid(parameters = {}, orderTotal) {
-    var options = {
-      threeDSecure: {
-        amount: orderTotal
-      }
-    };
-    return new Promise(function (resolve, reject) {
-      Braintree.getCardNonceWithThreeDSecure(
-        mapParameters(parameters),
-        orderTotal,
-        options,
-        nonce => resolve(nonce),
-        err => reject(err)
-      );
-    });
-  },
-
   getDeviceData(options = {}) {
     return new Promise(function (resolve, reject) {
       Braintree.getDeviceData(options, function (err, deviceData) {
@@ -96,7 +47,6 @@ module.exports = {
       });
     });
   },
-
   showPaymentViewController(config = {}) {
     var options = {
       tintColor: Platform.OS === 'ios' ? processColor(config.tintColor) : config.tintColor,
@@ -109,7 +59,6 @@ module.exports = {
       amount: config.amount,
       threeDSecure: config.threeDSecure,
     };
-
     if (Platform.OS === 'ios') {
       return new Promise(function (resolve, reject) {
         Braintree.showPaymentViewController(options, function (err, nonce) {
@@ -126,7 +75,6 @@ module.exports = {
       });
     }
   },
-
   showPayPalViewController() {
     return new Promise(function (resolve, reject) {
       if (Platform.OS === 'ios') {
@@ -160,5 +108,13 @@ module.exports = {
       }
     });
   },
-
+  showGooglePayViewController(options = {}) {
+    return new Promise(function (resolve, reject) {
+      if (Platform.OS === 'android') {
+        Braintree.showGooglePayViewController(options, nonce => resolve(nonce), error => reject(error));
+      } else {
+        reject('showGooglePayViewController is only available on ios devices');
+      }
+    });
+  },
 };
