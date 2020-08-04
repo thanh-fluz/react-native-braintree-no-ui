@@ -316,7 +316,7 @@ RCT_EXPORT_METHOD(showApplePayViewController:(NSDictionary *)options callback:(R
             [paymentSummaryItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:label amount:[NSDecimalNumber decimalNumberWithString:amount]]];
         }
         
-        paymentRequest.requiredBillingAddressFields = PKAddressFieldNone;
+        paymentRequest.requiredBillingAddressFields = PKAddressFieldPostalAddress;
         paymentRequest.shippingMethods = nil;
         paymentRequest.requiredShippingAddressFields = PKAddressFieldNone;
         paymentRequest.paymentSummaryItems = paymentSummaryItems;
