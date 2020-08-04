@@ -12,9 +12,10 @@ https://developers.braintreepayments.com/guides/client-sdk/setup/ios/v4
 
 ```js
 BTClient.setup(token);
+BTClient.setupWithURLScheme(token, "apple.merchant.id");
 ```
 
-
+---
 **PayPal, Venmo**
 
 ```js
@@ -30,10 +31,9 @@ BTClient.showPayPalViewController()
 ---
 
 **Apple Pay**
-
-```
+```js
 BTClient.showApplePayViewController({
-    merchantIdentifier: 'your.merchant.id',
+    merchantIdentifier: '<your.merchant.id>',
     paymentSummaryItems: [
         {label: 'Subtotals', amount: subtotals},
         {label: 'Shipping', amount: shipping},
@@ -48,33 +48,26 @@ BTClient.showApplePayViewController({
     });
 ```
 
-#### WhiteList
 
-If your app is built using iOS 9 as its Base SDK, then you must add URLs to a whitelist in your app's info.plist
-
-```js
-   <key>LSApplicationQueriesSchemes</key>
-   <array>
-     <string>com.paypal.ppclient.touch.v1</string>
-     <string>com.paypal.ppclient.touch.v2</string>
-     <string>com.venmo.touch.v2</string>
-   </array>
-```
-
-#### For both platforms:
+---
+**Google Pay**
 
 ```js
-if (Platform.OS === "ios") {
-  BTClient.setupWithURLScheme(token, "your.bundle.id.payments");
-} else {
-  BTClient.setup(token);
-}
+BTClient.showGooglePayViewController({
+    totalPrice: '<amount>',
+    currencyCode: 'US',
+    requireAddress: true,
+    googleMerchantId: '<google-merchant-id>'
+    })
+    .then((response) => {
+        console.log(response);
+        if (response.nonce) {
+            // Do something with the nonce
+        }
+    });
 ```
 
-### TODO
 
-1. remove card methods and 3D-methods 
-2. remove dropin-ui related reference
 
 ## Credits
 
