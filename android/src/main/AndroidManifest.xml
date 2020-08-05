@@ -7,7 +7,7 @@
       <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
         android:launchMode="singleTask"
         android:theme="@android:style/Theme.Translucent.NoTitleBar">
-        <meta-data android:name="com.google.android.gms.wallet.api.enabled" android:value="true"/>
+        
         <intent-filter>
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
@@ -15,5 +15,6 @@
             <data android:scheme="${applicationId}.braintree" />
         </intent-filter>
       </activity>
+      <meta-data android:name="com.google.android.gms.wallet.api.enabled" android:value="true"/>
     </application>
 </manifest>
