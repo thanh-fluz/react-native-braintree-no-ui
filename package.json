@@ -1,7 +1,7 @@
 {
   "name": "@fluzclient/react-native-braintree-no-ui",
-  "version": "4.4.0",
-  "description": "React Native Braintree module with Paypal and Venmo only",
+  "version": "4.4.1",
+  "description": "React Native Braintree module with paypal, venmo, google-pay, apple-pay",
   "main": "index",
   "author": {
     "name": "Fluz Dev"
