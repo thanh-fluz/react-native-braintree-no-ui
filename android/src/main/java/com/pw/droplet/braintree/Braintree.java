@@ -236,8 +236,11 @@ public class Braintree extends ReactContextBaseJavaModule   {
                         .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
                         .setCurrencyCode(options.getString("currencyCode"))
                         .build())
-                .billingAddressRequired(options.getBoolean("requireAddress"))
-                .googleMerchantId(options.getString("googleMerchantId"));
+                .billingAddressRequired(options.getBoolean("requireAddress"));
+                
+        if (options.hasKey("googleMerchantId")) {
+            googlePaymentRequest.googleMerchantId(options.getString("googleMerchantId"));
+        }
         GooglePayment.requestPayment(mBraintreeFragment, googlePaymentRequest);
     }
 
