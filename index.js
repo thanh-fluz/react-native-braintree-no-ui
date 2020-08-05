@@ -47,34 +47,6 @@ module.exports = {
       });
     });
   },
-  showPaymentViewController(config = {}) {
-    var options = {
-      tintColor: Platform.OS === 'ios' ? processColor(config.tintColor) : config.tintColor,
-      bgColor: Platform.OS === 'ios' ? processColor(config.bgColor) : config.bgColor,
-      barBgColor: Platform.OS === 'ios' ? processColor(config.barBgColor) : config.barBgColor,
-      barTintColor: Platform.OS === 'ios' ? processColor(config.barTintColor) : config.barTintColor,
-      callToActionText: config.callToActionText,
-      title: config.title,
-      description: config.description,
-      amount: config.amount,
-      threeDSecure: config.threeDSecure,
-    };
-    if (Platform.OS === 'ios') {
-      return new Promise(function (resolve, reject) {
-        Braintree.showPaymentViewController(options, function (err, nonce) {
-          nonce != null ? resolve(nonce) : reject(err);
-        });
-      });
-    } else {
-      return new Promise(function (resolve, reject) {
-        Braintree.paymentRequest(
-          options,
-          nonce => resolve(nonce),
-          error => reject(error)
-        );
-      });
-    }
-  },
   showPayPalViewController() {
     return new Promise(function (resolve, reject) {
       if (Platform.OS === 'ios') {

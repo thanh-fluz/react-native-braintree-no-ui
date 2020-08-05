@@ -230,6 +230,8 @@ public class Braintree extends ReactContextBaseJavaModule   {
 
     @ReactMethod
     public void showGooglePayViewController(final ReadableMap options, final Callback successCallback, final Callback errorCallback) {
+        this.successCallback = successCallback;
+        this.errorCallback = errorCallback;
         GooglePaymentRequest googlePaymentRequest = new GooglePaymentRequest()
                 .transactionInfo(TransactionInfo.newBuilder()
                         .setTotalPrice(options.getString("totalPrice"))
