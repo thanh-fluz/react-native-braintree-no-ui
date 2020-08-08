@@ -236,7 +236,7 @@ public class Braintree extends ReactContextBaseJavaModule   {
         if (options.hasKey("googleMerchantId")) {
             googlePaymentRequest.googleMerchantId(options.getString("googleMerchantId"));
         }
-        GooglePayment.requestPayment(mBraintreeFragment, googlePaymentRequest);
+        GooglePayment.requestPayment(this.mBraintreeFragment, googlePaymentRequest);
     }
 
     @ReactMethod
