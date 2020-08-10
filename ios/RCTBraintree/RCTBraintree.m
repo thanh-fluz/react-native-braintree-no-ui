@@ -51,87 +51,6 @@ RCT_EXPORT_METHOD(setupWithURLScheme
   }
 }
 
-RCT_EXPORT_METHOD(setup
-                  : (NSString *)clientToken callback
-                  : (RCTResponseSenderBlock)callback) {
-  self.braintreeClient =
-      [[BTAPIClient alloc] initWithAuthorization:clientToken];
-  if (self.braintreeClient == nil) {
-    callback(@[ @false ]);
-  } else {
-    callback(@[ @true ]);
-  }
-}
-
-RCT_EXPORT_METHOD(showPaymentViewController
-                  : (NSDictionary *)options callback
-                  : (RCTResponseSenderBlock)callback) {
-  dispatch_async(dispatch_get_main_queue(), ^{
-    self.threeDSecureOptions = options[@"threeDSecure"];
-    if (self.threeDSecureOptions) {
-      self.threeDSecure =
-          [[BTThreeDSecureDriver alloc] initWithAPIClient:self.braintreeClient
-                                                 delegate:self];
-    }
-
-    BTDropInViewController *dropInViewController =
-        [[BTDropInViewController alloc] initWithAPIClient:self.braintreeClient];
-    dropInViewController.delegate = self;
-
-    NSLog(@"%@", options);
-
-    UIColor *tintColor = options[@"tintColor"];
-    UIColor *bgColor = options[@"bgColor"];
-    UIColor *barBgColor = options[@"barBgColor"];
-    UIColor *barTintColor = options[@"barTintColor"];
-
-    NSString *title = options[@"title"];
-    NSString *description = options[@"description"];
-    NSString *amount = options[@"amount"];
-
-    if (tintColor)
-      dropInViewController.view.tintColor = [RCTConvert UIColor:tintColor];
-    if (bgColor)
-      dropInViewController.view.backgroundColor = [RCTConvert UIColor:bgColor];
-
-    dropInViewController.navigationItem.leftBarButtonItem =
-        [[UIBarButtonItem alloc]
-            initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                 target:self
-                                 action:@selector(userDidCancelPayment)];
-
-    self.callback = callback;
-
-    UINavigationController *navigationController =
-        [[UINavigationController alloc]
-            initWithRootViewController:dropInViewController];
-
-    if (barBgColor)
-      navigationController.navigationBar.barTintColor =
-          [RCTConvert UIColor:barBgColor];
-    if (barTintColor)
-      navigationController.navigationBar.tintColor =
-          [RCTConvert UIColor:barTintColor];
-
-    if (options[@"callToActionText"]) {
-      BTPaymentRequest *paymentRequest = [[BTPaymentRequest alloc] init];
-      paymentRequest.callToActionText = options[@"callToActionText"];
-
-      dropInViewController.paymentRequest = paymentRequest;
-    }
-
-    if (title)
-      [dropInViewController.paymentRequest setSummaryTitle:title];
-    if (description)
-      [dropInViewController.paymentRequest setSummaryDescription:description];
-    if (amount)
-      [dropInViewController.paymentRequest setDisplayAmount:amount];
-
-    [self.reactRoot presentViewController:navigationController
-                                 animated:YES
-                               completion:nil];
-  });
-}
 
 RCT_EXPORT_METHOD(showPayPalViewController : (RCTResponseSenderBlock)callback) {
   dispatch_async(dispatch_get_main_queue(), ^{
@@ -186,26 +105,6 @@ RCT_EXPORT_METHOD(showVenmoViewController : (RCTResponseSenderBlock)callback) {
                         callback(args);
                       }];
   });
-}
-
-RCT_REMAP_METHOD(getCardNonce, parameters
-                 : (NSDictionary *)parameters resolve
-                 : (RCTPromiseResolveBlock)resolve reject
-                 : (RCTPromiseRejectBlock)reject) {
-  BTCardClient *cardClient =
-      [[BTCardClient alloc] initWithAPIClient:self.braintreeClient];
-  BTCard *card = [[BTCard alloc] initWithParameters:parameters];
-  card.shouldValidate = YES;
-
-  [cardClient tokenizeCard:card
-                completion:^(BTCardNonce *tokenizedCard, NSError *error) {
-                  if (error == nil) {
-                    resolve(tokenizedCard.nonce);
-                  } else {
-                    reject(@"Error getting nonce",
-                           @"Cannot process this credit card type.", error);
-                  }
-                }];
 }
 
 RCT_EXPORT_METHOD(getDeviceData

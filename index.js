@@ -22,24 +22,6 @@ module.exports = {
       Braintree.setup(token, test => resolve(test), err => reject(err));
     });
   },
-  getCardNonce(parameters = {}) {
-    return new Promise(function (resolve, reject) {
-      if (Platform.OS === 'ios') {
-        try {
-          resolve(Braintree.getCardNonce(mapParameters(parameters)));
-        } catch (error) {
-          reject(error);
-        }
-      } else {
-        Braintree.getCardNonce(
-          mapParameters(parameters),
-          nonce => resolve(nonce),
-          err => reject(err)
-        );
-      }
-
-    });
-  },
   getDeviceData(options = {}) {
     return new Promise(function (resolve, reject) {
       Braintree.getDeviceData(options, function (err, deviceData) {
