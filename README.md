@@ -42,7 +42,7 @@ BTClient.showApplePayViewController({
     })
     .then((response) => {
         console.log(response);
-        if (response.nonce) {
+        if (response.nonce && response.billingContact) {
             // Do something with the nonce
         }
     });
@@ -61,7 +61,7 @@ BTClient.showGooglePayViewController({
     })
     .then((response) => {
         console.log(response);
-        if (response.nonce) {
+        if (response.nonce && response.billingContact) {
             // Do something with the nonce
         }
     });
