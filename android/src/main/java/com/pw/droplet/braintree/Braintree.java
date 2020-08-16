@@ -194,18 +194,22 @@ public class Braintree extends ReactContextBaseJavaModule {
         @Override
         public void onActivityResult(Activity activity, int requestCode,
                                      int resultCode, Intent data) {
-          if (data != null) {
-            switch (resultCode) {
-            case Activity.RESULT_OK:
-              GooglePayment.tokenize(mBraintreeFragment,
-                                     PaymentData.getFromIntent(data));
-              break;
-            case Activity.RESULT_CANCELED:
-              nonceErrorCallback("USER_CANCELLATION");
-              break;
+          if (mBraintreeFragment instanceof BraintreeFragment) {
+            if (data != null) {
+              switch (resultCode) {
+              case Activity.RESULT_OK:
+
+                GooglePayment.tokenize(mBraintreeFragment,
+                                       PaymentData.getFromIntent(data));
+
+                break;
+              case Activity.RESULT_CANCELED:
+                nonceErrorCallback("USER_CANCELLATION");
+                break;
+              }
+            } else {
+              nonceErrorCallback("NO_DATA_AVAILABLE");
             }
-          }else{
-            nonceErrorCallback("NO_DATA_AVAILABLE");
           }
         }
       };
