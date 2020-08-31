@@ -194,14 +194,12 @@ public class Braintree extends ReactContextBaseJavaModule {
         @Override
         public void onActivityResult(Activity activity, int requestCode,
                                      int resultCode, Intent data) {
-          if (mBraintreeFragment instanceof BraintreeFragment) {
+          if (requestCode == GOOGLE_PAYMENT_REQUEST_CODE) {
             if (data != null) {
               switch (resultCode) {
               case Activity.RESULT_OK:
-
                 GooglePayment.tokenize(mBraintreeFragment,
                                        PaymentData.getFromIntent(data));
-
                 break;
               case Activity.RESULT_CANCELED:
                 nonceErrorCallback("USER_CANCELLATION");
@@ -258,7 +256,8 @@ public class Braintree extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void getDeviceData(final ReadableMap options,
-                            final Callback successCallback) {
+                            final Callback successCallback,
+                            final Callback errorCallback) {
     this.deviceDataCallback = successCallback;
     this.collectDeviceData = true;
     String type = options.getString("dataCollector");
@@ -267,7 +266,11 @@ public class Braintree extends ReactContextBaseJavaModule {
           this.mBraintreeFragment, new BraintreeResponseListener<String>() {
             @Override
             public void onResponse(String deviceData) {
-              successCallback.invoke(null, deviceData);
+              if (deviceData != null) {
+                successCallback.invoke(deviceData);
+              } else {
+                errorCallback.invoke("BT:: DEVICE_DATA is empty.");
+              }
             }
           });
     } else {
@@ -275,7 +278,11 @@ public class Braintree extends ReactContextBaseJavaModule {
           this.mBraintreeFragment, new BraintreeResponseListener<String>() {
             @Override
             public void onResponse(String deviceData) {
-              successCallback.invoke(null, deviceData);
+              if (deviceData != null) {
+                successCallback.invoke(deviceData);
+              } else {
+                errorCallback.invoke("BT:: DEVICE_DATA is empty.");
+              }
             }
           });
     }

@@ -361,6 +361,12 @@
 				sv,
 				tr,
 				"zh-Hans",
+				en_AU,
+				en_CA,
+				en_GB,
+				es_ES,
+				fr_CA,
+				fr_FR,
 			);
 			mainGroup = DE4F06C31D156AA8005F99CD;
 			productRefGroup = DE4F06CD1D156AA8005F99CD /* Products */;

@@ -24,9 +24,13 @@ module.exports = {
   },
   getDeviceData(options = {}) {
     return new Promise(function (resolve, reject) {
-      Braintree.getDeviceData(options, function (err, deviceData) {
-        deviceData != null ? resolve(deviceData) : reject(err);
-      });
+      if (Platform.OS === 'ios') {
+        Braintree.getDeviceData(options, function (err, deviceData) {
+          deviceData != null ? resolve(deviceData) : reject(err);
+        });
+      } else {
+        Braintree.getDeviceData(options, deviceData => resolve(deviceData), error => reject(error));
+      }
     });
   },
   showPayPalViewController() {
