@@ -194,7 +194,7 @@ public class Braintree extends ReactContextBaseJavaModule {
         @Override
         public void onActivityResult(Activity activity, int requestCode,
                                      int resultCode, Intent data) {
-          if (requestCode == GOOGLE_PAYMENT_REQUEST_CODE) {
+          if (requestCode == PAYMENT_REQUEST) {
             if (data != null) {
               switch (resultCode) {
               case Activity.RESULT_OK:
