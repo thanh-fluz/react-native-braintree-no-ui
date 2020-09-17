@@ -258,33 +258,37 @@ public class Braintree extends ReactContextBaseJavaModule {
   public void getDeviceData(final ReadableMap options,
                             final Callback successCallback,
                             final Callback errorCallback) {
-    this.deviceDataCallback = successCallback;
-    this.collectDeviceData = true;
-    String type = options.getString("dataCollector");
-    if (type.equals("paypal")) {
-      DataCollector.collectPayPalDeviceData(
-          this.mBraintreeFragment, new BraintreeResponseListener<String>() {
-            @Override
-            public void onResponse(String deviceData) {
-              if (deviceData != null) {
-                successCallback.invoke(deviceData);
-              } else {
-                errorCallback.invoke("BT:: DEVICE_DATA is empty.");
+    if (this.mBraintreeFragment instanceof BraintreeFragment) {
+      this.deviceDataCallback = successCallback;
+      this.collectDeviceData = true;
+      String type = options.getString("dataCollector");
+      if (type.equals("paypal")) {
+        DataCollector.collectPayPalDeviceData(
+            this.mBraintreeFragment, new BraintreeResponseListener<String>() {
+              @Override
+              public void onResponse(String deviceData) {
+                if (deviceData != null) {
+                  successCallback.invoke(deviceData);
+                } else {
+                  errorCallback.invoke("BT:: DEVICE_DATA is empty.");
+                }
               }
-            }
-          });
+            });
+      } else {
+        DataCollector.collectDeviceData(
+            this.mBraintreeFragment, new BraintreeResponseListener<String>() {
+              @Override
+              public void onResponse(String deviceData) {
+                if (deviceData != null) {
+                  successCallback.invoke(deviceData);
+                } else {
+                  errorCallback.invoke("BT:: DEVICE_DATA is empty.");
+                }
+              }
+            });
+      }
     } else {
-      DataCollector.collectDeviceData(
-          this.mBraintreeFragment, new BraintreeResponseListener<String>() {
-            @Override
-            public void onResponse(String deviceData) {
-              if (deviceData != null) {
-                successCallback.invoke(deviceData);
-              } else {
-                errorCallback.invoke("BT:: DEVICE_DATA is empty.");
-              }
-            }
-          });
+      errorCallback.invoke("BT:: DATA_COLLECTOR not init.");
     }
   }
 
