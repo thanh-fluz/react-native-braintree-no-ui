@@ -26,6 +26,11 @@ static NSString *URLScheme;
   return _sharedInstance;
 }
 
++ (BOOL)requiresMainQueueSetup
+{
+    return YES;
+}
+
 - (instancetype)init {
   if ((self = [super init])) {
     self.dataCollector = [[BTDataCollector alloc]
