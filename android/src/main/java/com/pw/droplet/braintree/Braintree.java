@@ -1,16 +1,13 @@
 package com.pw.droplet.braintree;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.DataCollector;
 import com.braintreepayments.api.GooglePayment;
 import com.braintreepayments.api.PayPal;
-import com.braintreepayments.api.ThreeDSecure;
 import com.braintreepayments.api.Venmo;
 import com.braintreepayments.api.exceptions.BraintreeError;
 import com.braintreepayments.api.exceptions.ErrorWithResponse;
@@ -19,8 +16,7 @@ import com.braintreepayments.api.interfaces.BraintreeCancelListener;
 import com.braintreepayments.api.interfaces.BraintreeErrorListener;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
-import com.braintreepayments.api.models.CardBuilder;
-import com.braintreepayments.api.models.CardNonce;
+import com.braintreepayments.api.models.BraintreeRequestCodes;
 import com.braintreepayments.api.models.GooglePaymentCardNonce;
 import com.braintreepayments.api.models.GooglePaymentRequest;
 import com.braintreepayments.api.models.PayPalRequest;
@@ -40,21 +36,15 @@ import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class Braintree extends ReactContextBaseJavaModule {
-  private static final int PAYMENT_REQUEST = 1706816330;
   private String token;
   private Callback deviceDataCallback;
   private Boolean collectDeviceData = false;
   private Callback successCallback;
   private Callback errorCallback;
 
-  private Context mActivityContext;
   private BraintreeFragment mBraintreeFragment;
-
-  private ReadableMap threeDSecureOptions;
 
   public Braintree(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -194,7 +184,8 @@ public class Braintree extends ReactContextBaseJavaModule {
         @Override
         public void onActivityResult(Activity activity, int requestCode,
                                      int resultCode, Intent data) {
-          if (requestCode == PAYMENT_REQUEST) {
+          int unshiftRequestCode = requestCode & 0x0000ffff;
+          if (unshiftRequestCode == BraintreeRequestCodes.GOOGLE_PAYMENT) {
             if (data != null) {
               switch (resultCode) {
               case Activity.RESULT_OK:
