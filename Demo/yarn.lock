@@ -735,7 +735,7 @@
     strip-json-comments "^3.1.1"
 
 "@fluzclient/react-native-braintree-no-ui@../":
-  version "5.0.5"
+  version "5.0.6"
 
 "@hapi/hoek@^9.0.0":
   version "9.2.0"
