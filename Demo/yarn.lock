@@ -734,8 +734,9 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@fluzclient/react-native-braintree-no-ui@../":
+"@fluzclient/react-native-braintree-no-ui@https://github.com/StronkMan/react-native-braintree-no-ui":
   version "5.0.6"
+  resolved "https://github.com/StronkMan/react-native-braintree-no-ui#6388abb80c5ff94cb21de3abac4a32055cf40a73"
 
 "@hapi/hoek@^9.0.0":
   version "9.2.0"
