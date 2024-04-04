@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@fluzclient/react-native-braintree-no-ui": "https://github.com/StronkMan/react-native-braintree-no-ui",
+    "@fluzclient/react-native-braintree-no-ui": "../",
     "react": "17.0.1",
     "react-native": "0.64.2"
   },
