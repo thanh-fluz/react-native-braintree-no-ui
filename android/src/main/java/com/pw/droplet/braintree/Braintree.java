@@ -1,5 +1,3 @@
-
-
 package com.pw.droplet.braintree;
 
 import android.app.Activity;
@@ -13,6 +11,7 @@ import com.braintreepayments.api.BraintreeClient;
 import com.braintreepayments.api.BraintreeRequestCodes;
 import com.braintreepayments.api.BrowserSwitchResult;
 import com.braintreepayments.api.DataCollector;
+import com.braintreepayments.api.GooglePayCardNonce;
 import com.braintreepayments.api.GooglePayClient;
 import com.braintreepayments.api.GooglePayRequest;
 import com.braintreepayments.api.PayPalAccountNonce;
@@ -37,7 +36,6 @@ import com.google.android.gms.wallet.TransactionInfo;
 import com.google.android.gms.wallet.WalletConstants;
 
 
-
 public class Braintree extends ReactContextBaseJavaModule
         implements ActivityEventListener, LifecycleEventListener {
 
@@ -50,6 +48,7 @@ public class Braintree extends ReactContextBaseJavaModule
     private PayPalClient mPayPalClient;
     private GooglePayClient mGooglePayClient;
     private VenmoClient mVenmoClient;
+
     @Override
     public String getName() {
         return "Braintree";
@@ -220,7 +219,41 @@ public class Braintree extends ReactContextBaseJavaModule
             return;
         }
         if (nonce != null) {
-            sendPaymentMethodNonceResult(nonce.getString());
+            if (mPromise != null) {
+                GooglePayCardNonce paymentMethodNonce = (GooglePayCardNonce) nonce;
+                WritableMap result = Arguments.createMap();
+                result.putString("nonce", paymentMethodNonce.getString());
+
+                WritableMap billingContact = Arguments.createMap();
+
+                billingContact.putString(
+                        "streetAddress",
+                        ((GooglePayCardNonce) paymentMethodNonce)
+                                .getBillingAddress()
+                                .getStreetAddress());
+                billingContact.putString(
+                        "city", ((GooglePayCardNonce) paymentMethodNonce)
+                                .getBillingAddress()
+                                .getLocality());
+                billingContact.putString(
+                        "state", ((GooglePayCardNonce) paymentMethodNonce)
+                                .getBillingAddress()
+                                .getRegion());
+                billingContact.putString(
+                        "country", ((GooglePayCardNonce) paymentMethodNonce)
+                                .getBillingAddress()
+                                .getCountryCodeAlpha2());
+                billingContact.putString(
+                        "postalCode", ((GooglePayCardNonce) paymentMethodNonce)
+                                .getBillingAddress()
+                                .getPostalCode());
+                billingContact.putString(
+                        "countryCode", ((GooglePayCardNonce) paymentMethodNonce)
+                                .getBillingAddress()
+                                .getCountryCodeAlpha2());
+                result.putMap("billingContact", billingContact);
+                mPromise.resolve(result);
+            }
         }
     }
 
