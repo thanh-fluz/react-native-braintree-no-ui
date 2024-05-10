@@ -3,12 +3,12 @@
  * https://github.com/facebook/react-native
  *
  * @format
- * @flow strict-local
  */
 
 import React, {useEffect} from 'react';
-import type {Node} from 'react';
+import type {PropsWithChildren} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -26,7 +26,11 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const Section = ({children, title}): Node => {
+type SectionProps = PropsWithChildren<{
+  title: string;
+}>;
+
+function Section({children, title}: SectionProps): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
@@ -50,9 +54,9 @@ const Section = ({children, title}): Node => {
       </Text>
     </View>
   );
-};
+}
 
-const App: () => Node = () => {
+function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -63,12 +67,6 @@ const App: () => Node = () => {
     async function init() {
       try {
         await BTClient.setup('sandbox_rzkv7jvj_n6rdmkvv75thbzdw');
-        const result = await BTClient.showGooglePayViewController({
-          currencyCode: 'USD',
-          requireAddress: true,
-          totalPrice: '10.00',
-        });
-        console.log('payment nonce payload', result);
       } catch (err) {
         console.log(err);
       }
@@ -76,9 +74,47 @@ const App: () => Node = () => {
     init();
   }, []);
 
+  async function handleGooglePay() {
+    await BTClient.showGooglePayViewController({
+      currencyCode: 'USD',
+      requireAddress: true,
+      totalPrice: '10.00',
+    })
+      .then((result: Record<string, string>) => {
+        console.log('showGooglePayViewController payload', result);
+      })
+      .catch((err: any) => console.log(err));
+  }
+
+  async function handlePaypal() {
+    await BTClient.showPayPalViewController()
+      .then((result: Record<string, string>) => {
+        console.log('showPayPalViewController payload', result);
+      })
+      .catch((err: any) => console.log(err));
+  }
+
+  async function handleVenmo() {
+    await BTClient.showVenmoViewController()
+      .then((result: Record<string, string>) => {
+        console.log('showVenmoViewController payload', result);
+      })
+      .catch((err: any) => console.log(err));
+  }
+  async function handleDataCollector() {
+    await BTClient.getDeviceData()
+      .then((result: Record<string, string>) =>
+        console.log('getDeviceData', result),
+      )
+      .catch((err: any) => console.log(err));
+  }
+
   return (
     <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <StatusBar
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        backgroundColor={backgroundStyle.backgroundColor}
+      />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
@@ -88,8 +124,10 @@ const App: () => Node = () => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
+            <Button onPress={handleDataCollector} title="Data Collector" />
+            <Button onPress={handleGooglePay} title="Google" />
+            <Button onPress={handleVenmo} title="Venmo" />
+            <Button onPress={handlePaypal} title="PayPal" />
           </Section>
           <Section title="See Your Changes">
             <ReloadInstructions />
@@ -105,7 +143,7 @@ const App: () => Node = () => {
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   sectionContainer: {
